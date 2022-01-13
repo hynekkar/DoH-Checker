@@ -4,3 +4,4 @@ joblib
 func-timeout
 scapy
 dnspython
+pyasn

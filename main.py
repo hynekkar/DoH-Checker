@@ -7,6 +7,7 @@ import copy
 from scapy.all import DNS
 import socket
 import argparse
+import pyasn
 
 from esnicheck.esnicheck.check import ESNICheck
 
@@ -154,7 +155,7 @@ class dohChecker:
 
 def checkDoh(ip):
     checker = dohChecker()
-
+    asndb = pyasn.pyasn('ipasn011021.dat')
     try:
         jsonh1status = checker.testJsonH1(ip)
         jsonh2status = checker.testJsonH2(ip)
@@ -174,8 +175,10 @@ def checkDoh(ip):
         except Exception:
             hasESNI = "False";
             hasTLS13 = "False";
+        asn = asndb.lookup(str(ip))[0]
+
         print(str(ip) + "," + str(jsonh1status) + "," + str(jsonh2status) + "," + str(geth1status) + "," + str(
-            geth2status) + "," + str(posth1status) + "," + str(posth2status) + "," + url + "," + hasESNI + "," + hasTLS13)
+            geth2status) + "," + str(posth1status) + "," + str(posth2status) + "," + url + "," + hasESNI + "," + hasTLS13 + "," + str(asn))
 
 
 """
@@ -187,5 +190,5 @@ parser.add_argument('-f','--file', type=argparse.FileType('r'), help='File with 
 parser.add_argument('-j','--jobs', type=int, help='Number of parallel requests', required=False, default=25)
 args = parser.parse_args()
 
-print("IP,jsonH1,jsonH2,getH1,getH2,postH1,postH2,hostname,ESNIsupport,TLS13support")
+print("IP,jsonH1,jsonH2,getH1,getH2,postH1,postH2,hostname,ESNIsupport,TLS13support, asn")
 element_information = Parallel(n_jobs=args.jobs, prefer="threads")(delayed(checkDoh)(line.rstrip("\n")) for line in args.file)
