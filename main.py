@@ -167,7 +167,16 @@ def checkDoh(ip):
         return
 
     if (jsonh1status or jsonh2status or geth2status or geth1status or posth1status or posth2status):
-        url = str(socket.getnameinfo((ip, 0), 0)[0])
+        try:
+            url = str(socket.getnameinfo((ip, 0), 0)[0])
+        except Exception:
+            url = None;
+
+        try:
+            asn = asndb.lookup(str(ip))[0]
+        except Exception:
+            asn = None;
+
         try:
             esni = ESNICheck(url)
             hasESNI = str(esni.has_esni())
@@ -175,7 +184,7 @@ def checkDoh(ip):
         except Exception:
             hasESNI = "False";
             hasTLS13 = "False";
-        asn = asndb.lookup(str(ip))[0]
+
 
         print(str(ip) + "," + str(jsonh1status) + "," + str(jsonh2status) + "," + str(geth1status) + "," + str(
             geth2status) + "," + str(posth1status) + "," + str(posth2status) + "," + url + "," + hasESNI + "," + hasTLS13 + "," + str(asn))
