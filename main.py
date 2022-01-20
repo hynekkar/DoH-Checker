@@ -170,12 +170,12 @@ def checkDoh(ip):
         try:
             url = str(socket.getnameinfo((ip, 0), 0)[0])
         except Exception:
-            url = None;
+            url = str(None);
 
         try:
             asn = asndb.lookup(str(ip))[0]
         except Exception:
-            asn = None;
+            asn = str(None);
 
         try:
             esni = ESNICheck(url)
@@ -187,7 +187,7 @@ def checkDoh(ip):
 
 
         print(str(ip) + "," + str(jsonh1status) + "," + str(jsonh2status) + "," + str(geth1status) + "," + str(
-            geth2status) + "," + str(posth1status) + "," + str(posth2status) + "," + url + "," + hasESNI + "," + hasTLS13 + "," + str(asn))
+            geth2status) + "," + str(posth1status) + "," + str(posth2status) + "," + str(url) + "," + str(hasESNI) + "," + str(hasTLS13) + "," + str(asn))
 
 
 """
